@@ -45,9 +45,10 @@ def home_function():
 @app.route("/spotify")
 def spotify():
     #Authorization 1st call
-    url_args = "&".join(["{}={}".format(key, quote(val)) for key, val in auth_query_parameters.items()])
-    auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
-    return redirect(auth_url)
+    return render_template("spotify.html")
+    # url_args = "&".join(["{}={}".format(key, quote(val)) for key, val in auth_query_parameters.items()])
+    # auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
+    # return redirect(auth_url)
 
 
 @app.route("/redirect")
