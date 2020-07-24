@@ -7,3 +7,8 @@ app = Flask(__name__)
 def home_function():
     return render_template("home.html")
 
+@app.route("/redirect")
+def redirect():
+    return render_template("redirect.html")
+
+    
