@@ -45,8 +45,8 @@ def home_function():
 
 @app.route("/spotify")
 def spotify():
-            response = startup.getUser()
-            return redirect(response)
+    response = startup.getUser()
+    return redirect(response)
     # url_args = "&".join(["{}={}".format(key, quote(val)) for key, val in auth_query_parameters.items()])
     # auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
     # return redirect(auth_url)

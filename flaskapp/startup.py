@@ -7,7 +7,7 @@ CLIENT_ID = "604f740a180c4f1f958bf7e166174f3e"
 CLIENT_SECRET = "2b6aaa9aa91f4355b5879257301dab48"
 
 #Port and callback url can be changed or ledt to localhost:5000
-PORT = "8000"
+PORT = "80"
 CALLBACK_URL = "http://www.drewmi.ch/redirect"
 
 #Add needed scope from spotify user
