@@ -53,7 +53,9 @@ def spotify():
 
 
 @app.route("/redirect")
+def redirect():
     startup.getUserToken(request.args['code'])
+    return render_template("redirect.html")
 
     # #Authorization 2nd call
     # auth_token = request.args['code']
