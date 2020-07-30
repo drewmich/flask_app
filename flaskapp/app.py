@@ -1,10 +1,11 @@
 import json
+import urllib
+
 from flask import Flask, render_template, redirect, url_for, request
 import credentials
 import requests
 import startup
-from urllib.parse import quote
-
+from urllib.parse import quote, urlencode
 
 app = Flask(__name__)
 
@@ -53,8 +54,9 @@ def spotify():
         'scope': SCOPE,
     }
 
-    res = make_response(redirect(f'{SPOTIFY_AUTH_URL}/?{urlencode(payload)}'))
-    return res
+    return redirect("{}/?{}".format(SPOTIFY_AUTH_URL, urllib.parse.urlencode(payload)))
+    # res = make_response(redirect(f'{SPOTIFY_AUTH_URL}/?{urlencode(payload)}'))
+    # return res
     # response = startup.getUser()
     # return redirect(response)
 
