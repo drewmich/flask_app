@@ -1,11 +1,10 @@
 import json
-import urllib
-
 from flask import Flask, render_template, redirect, url_for, request
 import credentials
 import requests
 import startup
-from urllib.parse import quote, urlencode
+import base64
+from urllib import quote, urlencode
 
 app = Flask(__name__)
 
@@ -15,27 +14,12 @@ CLIENT_SECRET = credentials.clientsecret
 
 #spotify links
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
-# SPOTIFY_API_BASE_URL = "https://api.spotify.com"
-# API_VERSION = "v1"
-# SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
-# SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
-#
-# #More
 CLIENT_SIDE_URL = "http://www.drewmi.ch"
 PORT = 80
-REDIRECT_URI = "{}:{}/redirect".format(CLIENT_SIDE_URL, PORT)
+REDIRECT_URI = "http://www.drewmi.ch/redirect"
 SCOPE = "playlist-modify-private"
 STATE = ""
-# SHOW_DIALOG = "false"
-#
-# auth_query_parameters = {
-#     "response_type": "code",
-#     "redirect_uri": REDIRECT_URI,
-#     "scope": SCOPE,
-#     # "state": STATE,
-#     # "show_dialog": SHOW_DIALOG_str,
-#     "client_id": CLIENT_ID
-# }
+
 
 
 @app.route("/")
@@ -53,10 +37,10 @@ def spotify():
         'state' : STATE,
         'scope': SCOPE,
     }
+    #return redirect(f"{SPOTIFY_AUTH_URL}/?{urllib.parse.urlencode(payload)}")
+    return redirect("https://accounts.spotify.com/authorize?client_id=604f740a180c4f1f958bf7e166174f3e&response_type=code&redirect_uri=http%3A%2F%2Fwww.drewmi.ch%2Fredirect&scope=playlist-modify-private")
 
-    return redirect("{}/?{}".format(SPOTIFY_AUTH_URL, urllib.parse.urlencode(payload)))
-    # res = make_response(redirect(f'{SPOTIFY_AUTH_URL}/?{urlencode(payload)}'))
-    # return res
+
     # response = startup.getUser()
     # return redirect(response)
 
