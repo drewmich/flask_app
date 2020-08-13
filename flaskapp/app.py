@@ -4,9 +4,13 @@ import credentials
 import requests
 import startup
 import base64
-from urllib import quote, urlencode
+from logging import FileHandler, WARNING
 
 app = Flask(__name__)
+file_handler = FileHandler("errorlog.txt")
+file_handler.setLevel(WARNING)
+
+app.logger.addHandler(file_handler)
 
 #client credentials
 CLIENT_ID = credentials.clientid
@@ -16,7 +20,7 @@ CLIENT_SECRET = credentials.clientsecret
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 CLIENT_SIDE_URL = "http://www.drewmi.ch"
 PORT = 80
-REDIRECT_URI = "http://www.drewmi.ch/redirect"
+REDIRECT_URI = "http://www.drewmi.ch/callback"
 SCOPE = "playlist-modify-private"
 STATE = ""
 
@@ -30,23 +34,18 @@ def home_function():
 
 @app.route("/spotify")
 def spotify():
-    payload = {
-        'client_id': CLIENT_ID,
-        'response_type': 'code',
-        'redirect_uri': REDIRECT_URI,
-        'state' : STATE,
-        'scope': SCOPE,
-    }
-    #return redirect(f"{SPOTIFY_AUTH_URL}/?{urllib.parse.urlencode(payload)}")
-    return redirect("https://accounts.spotify.com/authorize?client_id=604f740a180c4f1f958bf7e166174f3e&response_type=code&redirect_uri=http%3A%2F%2Fwww.drewmi.ch%2Fredirect&scope=playlist-modify-private")
-
-
-    # response = startup.getUser()
-    # return redirect(response)
+    return redirect("https://accounts.spotify.com/authorize?client_id=604f740a180c4f1f958bf7e166174f3e&response_type=code&redirect_uri=http%3A%2F%2Fwww.drewmi.ch%2Fcallback&scope=playlist-modify-private")
 
 
 
-@app.route("/redirect")
-def redirect():
+
+@app.route("/callback")
+def callback():
     startup.getUserToken(request.args['code'])
     return render_template("redirect.html")
+
+
+@app.route("/projects")
+def stuff_fxn():
+    return render_template("construction.html")
+
