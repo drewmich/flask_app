@@ -23,7 +23,14 @@ PORT = 80
 REDIRECT_URI = "http://www.drewmi.ch/callback"
 SCOPE = "playlist-modify-private"
 STATE = ""
+HEADER = 'application/x-www-form-urlencoded'
+TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token"
 
+
+def handleToken(response):
+    auth_head = {"Authorization": "Bearer {}".format(response["access_token"])}
+    REFRESH_TOKEN = response["refresh_token"]
+    return [response["access_token"], auth_head, response["scope"], response["expires_in"]]
 
 
 @app.route("/")
@@ -39,13 +46,29 @@ def spotify():
 
 
 
-@app.route("/callback")
+@app.route("/callback", methods=["POST", "GET"])
 def callback():
-    startup.getUserToken(request.args['code'])
-    return render_template("redirect.html")
+    SPOT_CODE = request.args['code']
+    
+    body = {
+        "grant_type": 'authorization_code',
+        "code" : SPOT_CODE,
+        "redirect_uri": REDIRECT_URI,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET
+    }
+
+    #encoded = base64.b64encode("{}:{}".format(CLIENT_ID, CLIENT_SECRET).encode('UTF-8')).decode('ascii')
+    #headers = {"Content-Type" : HEADER, "Authorization" : "Basic {}".format(encoded)}
+    step_two = requests.post(TOKEN_ENDPOINT, data=body)
+
+    #TOKEN_DATA = handleToken(json.loads(post.text)
+    return render_template("redirect.html", variable=step_two.request.body)
+#render_template("redirect.html")
 
 
 @app.route("/projects")
 def stuff_fxn():
     return render_template("construction.html")
+
 
