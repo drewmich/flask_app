@@ -65,106 +65,21 @@ def callback():
     
 
 
-    return """
-        <html>
-        <head>
-        </head>
-        <body>
-             <h2> Let's make your playlist</h2>
-             <form action="/playlist">
-                 Playlist name <input type='text' name='playlist_name'><br>
-                 Genre <input type='text' list="genres" name="genre"><br>
- 
-                <input type="hidden" name="usr_token" value={}>
-
-                <datalist id="genres">
-                   <option value="alternative"/>
-                   <option value="chill"/>
-                   <option value="club"/>
-                   <option value="country"/>
-                   <option value="dance"/>
-                   <option value="death-metal"/>
-                   <option value="deep-house"/>
-                   <option value="edm"/>
-                   <option value="hard-rock"/>
-                   <option value="hip-hop"/>
-                   <option value="house"/>
-                   <option value="indie"/>
-                   <option value="metal"/>
-                   <option value="party"/>
-                   <option value="pop"/>
-                   <option value="rock"/>
-                 </datalist>
-
-                 BPM <input type="text" list="bpm" name="bpm"><br>
-
-                <datalist id="bpm">
-                   <option value="130"/>
-                   <option value="135"/>
-                   <option value="140"/>
-                   <option value="145"/>
-                   <option value="150"/>
-                   <option value="155"/>
-                   <option value="160"/>
-                   <option value="165"/>
-                   <option value="170"/>
-                   <option value="175"/>
-                   <option value="180"/>
-                   <option value="185"/>
-                   <option value="190"/>
-                </datalist>
-
-                Number of Songs <input type="text" list="songs" name="songs"><br>
-<datalist id="songs">
-
-               <datalist id="songs">
-                  <option value="5"/>
-                  <option value="6"/>
-                  <option value="7"/>
-                  <option value="8"/>
-                  <option value="9"/>
-                  <option value="10"/>
-                  <option value="11"/>
-                  <option value="12"/>
-                  <option value="13"/>
-                  <option value="14""/>
-                  <option value="15"/>
-                  <option value="16"/>
-                  <option value="17"/>
-                  <option value="18"/>
-                  <option value="19"/>
-                  <option value="20"/>
-                  <option value="21"/>
-                  <option value="22"/>
-                  <option value="23"/>
-                  <option value="24"/>
-                  <option value="25"/>
-
-               </datalist>
-                
-                Popularity 0-100 (optional) <input type='text' name='popularity'><br>
-
-                 <input type='submit' value='Continue'>
-             </form>
-            
-             
-         </body>
-         </html>
-         """.format(TOKEN)
+    return render_template("playlist.html", user_token_ = TOKEN)
 
 @app.route("/playlist", methods=["POST", "GET"])
 def playlist():
 
     #Sets variables with data from submitted form
-    name = request.args.get('playlist_name')
-    bpm = request.args.get('bpm')
-    popularity = request.args.get('popularity')
-    numberSongs = request.args.get('songs')
-    genre = request.args.get('genre')
+    name = request.form['playlist_name']
+    bpm = request.form['bpm']
+    popularity = request.form['popularity']
+    numberSongs = request.form['songs']
+    genre = request.form['genre']
     seed_genres = genre
     tempo = bpm
     limit = numberSongs
-    TOKEN = request.args.get('usr_token')
+    TOKEN = request.form['usr_token']
 
     #Sets Authorization Header for function
     HEADER = { "Authorization" : "Bearer {}".format(TOKEN) } 
@@ -258,7 +173,7 @@ def playlist():
 
 
 
-    return "Success!"
+    return render_template("success.html")
         
 
 
