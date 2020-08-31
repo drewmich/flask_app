@@ -5,9 +5,9 @@
 
 *Pictures at bottom*
 
-Hosted on this website is my spotify web app to create custom playlists on a user's profile. The purpose of this app is to give Spotify listeners access to the customization that the Spotify's Web API allows, without actually having to code anything. Users can select genre, beats per minute, number of songs, popularity of songs, and popularity of the songs. The original goal was to create playlists for going on runs, but it can be used for making playlists for anything.
+Hosted on this website is my Spotify web app to create custom playlists on a user's profile. The purpose of this app is to give Spotify listeners access to the customization that the Spotify's Web API allows, without actually having to code anything. Users can select genre, beats per minute, number of songs, and popularity of songs. The original goal was to create playlists for going on runs, but it can be used for making playlists for anything.
 
-When users land on my website, clicking the link called "Spotify App" will automatically redirect first time users to the spotify login page. The app uses Spotofy's Authorization code Flow. After entering their username and password, users are prompted to give permission to my app to create and modify a private playlist. 
+When users land on my website, clicking the link called "Spotify App" will automatically redirect first time users to the Spotify login page. The app uses Spotify's Authorization code Flow. After entering their username and password, users are prompted to give permission to my app to create and modify a private playlist. 
 
 After accepting, users are redirected to the page below, where they are able to name the new playlist, and are given options for customizing the type of songs that will be added to the playlist.
 
