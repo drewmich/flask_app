@@ -13,11 +13,15 @@ file_handler.setLevel(WARNING)
 
 app.logger.addHandler(file_handler)
 
-#client credentials
+
+   ##############################
+   ###                        ###
+   ###   Utility Variables    ###
+   ###                        ###
+   ##############################
+
 CLIENT_ID = credentials.clientid
 CLIENT_SECRET = credentials.clientsecret
-
-#spotify links
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 CLIENT_SIDE_URL = "http://www.drewmi.ch"
 PORT = 80
@@ -33,22 +37,24 @@ def handleToken(response):
     REFRESH_TOKEN = response["refresh_token"]
     return [response["access_token"], auth_head, response["scope"], response["expires_in"]]
 
-
+#Homepage function
 @app.route("/")
 def home_function():
     return render_template("home.html")
 
 
-
+#Immediately redirects users to spotify login page for web app
+#Follows Spotify's "Authorization Code Flow"
 @app.route("/spotify")
 def spotify():
     return redirect("https://accounts.spotify.com/authorize?client_id=604f740a180c4f1f958bf7e166174f3e&response_type=code&redirect_uri=http%3A%2F%2Fwww.drewmi.ch%2Fcallback&scope=playlist-modify-private")
 
 
 
-
 @app.route("/callback", methods=["POST", "GET"])
 def callback():
+
+    #Recieves login callback from spotify, parses for authorization code
     SPOT_CODE = request.args['code']
     
     body = {
@@ -58,13 +64,13 @@ def callback():
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET
     }
-
+    
+    #Makes call to spotify to exchange authorization code for access token
     step_two = requests.post(TOKEN_ENDPOINT, data=body)
     new_data = json.loads(step_two.text)
     TOKEN = new_data['access_token']
-    
 
-
+    #Page where users customize their playlist
     return render_template("playlist.html", user_token_ = TOKEN)
 
 @app.route("/playlist", methods=["POST", "GET"])
@@ -81,7 +87,7 @@ def playlist():
     limit = numberSongs
     TOKEN = request.form['usr_token']
 
-    #Sets Authorization Header for function
+    #Sets Authorization Header for future requests
     HEADER = { "Authorization" : "Bearer {}".format(TOKEN) } 
 
     
@@ -91,7 +97,7 @@ def playlist():
     userID = user_data_text['id']
 
 
-    #Makes playlist to be filled
+    #Setup for making empty playlist to be filled
     #Returns a playlist object
     playlistCallURL = "https://api.spotify.com/v1/users/{}/playlists".format(userID)
     contentType = "application/json"
@@ -107,10 +113,9 @@ def playlist():
 
     HEADER_ADD = { "Authorization" : "Bearer {tkn}".format(tkn=TOKEN), "Content-Type" : "application/json" }
 
+    #Call to make empty playlist
     playlist_data = requests.post(playlistCallURL, headers=HEADER_ADD, data=jsonBody)
     playlist_data_text = json.loads(playlist_data.text)
-    #return playlist_data_text
-    
     playlistID = playlist_data_text['id']
 
 
@@ -134,28 +139,26 @@ def playlist():
     ('target_popularity', popularity),
     ('target_tempo', tempo),
     )
-
-    #response = requests.get('https://api.spotify.com/v1/recommendations', headers=headers, params=params)
-
-    #Call
-    #recommendations_data = requests.get("https://api.spotify.com/v1/recommendations", headers=rec_headers, params=rec_params)
     
     rec_url = urllib.parse.urlencode(BODY_REC)
     final_url = "https://api.spotify.com/v1/recommendations?" + rec_url 
 
+    #Makes call to spotify
+    #This is where the songs that fit user criteria are fetched
     recommendations_data = requests.get(final_url, headers=rec_headers)
 
     recommendations_data_text = json.loads(recommendations_data.text)
 
-    #returnvaltest = final_url+seed_genres+bpm+limit+popularity
-
+    
+    #Grabs the array of track objects returned by spotify that fit user input
     tracksArray = recommendations_data_text['tracks'] 
 
     trackUriList = []
 
     trackString = ""
 
-    
+    #Iterates through tracks array, and adds necessary text to a list of 
+    #strings that will be sent to spotify to add tracks to the user's empty playlist
     for item in tracksArray:
 
         trackString =  item['uri']
@@ -167,10 +170,10 @@ def playlist():
 
     add_songs_url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlistID)
 
+    #Request to add tracks to the user's playlist
     add_data = requests.post(add_songs_url, headers=HEADER_ADD, data=jsonUrisList)
     
     add_data_text = json.loads(add_data.text)
-
 
 
     return render_template("success.html")
