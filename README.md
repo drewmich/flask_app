@@ -13,6 +13,6 @@ After accepting, users are redirected to the page below, where they are able to 
 
 ![image](https://user-images.githubusercontent.com/47374581/91737215-ca41bf80-eb7c-11ea-990c-5bcc5fa8007c.png)
 
-After clicking continue, the playlist is generated and shown this page:
+After clicking continue, the playlist is generated and users are shown this page:
 
 ![image](https://user-images.githubusercontent.com/47374581/91737239-d0d03700-eb7c-11ea-92c7-013a5b4bc7e5.png)
